@@ -1,0 +1,133 @@
+{% extends 'templates/base.html' %} {% block content %}
+
+<div class="container py-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h1 class="fw-bold display-6 mb-1">My Addresses</h1>
+
+      <p class="text-muted mb-0">Manage your saved delivery addresses</p>
+    </div>
+
+    <a
+      href="{% url 'account-profile-add_address' %}"
+      class="btn btn-dark rounded-pill px-4 py-2"
+    >
+      + Add Address
+    </a>
+  </div>
+
+  <!-- Address Grid -->
+
+  <div class="row g-4">
+    {% for address in addresses %}
+
+    <div class="col-lg-6">
+      <div class="address-modern-card position-relative">
+        <!-- Default Badge -->
+
+        {% if address.is_default %}
+
+        <span class="default-badge"> Default </span>
+
+        {% endif %}
+
+        <h4 class="fw-bold mb-3">
+          {{ address.first_name }} {{ address.last_name }}
+        </h4>
+
+        <!-- Phone -->
+
+        <p class="text-muted mb-2">📞 {{ address.phone_number }}</p>
+
+
+        <p class="text-muted mb-4 lh-lg">
+          {{ address.street }}, {{ address.city }}, {{ address.state }} - {{
+          address.pincode }}
+        </p>
+
+        <div class="d-flex gap-3">
+          <a
+            href="{% url 'account-profile-edit_address' address.id %}"
+            class="btn btn-outline-dark rounded-pill px-4"
+          >
+            Edit
+          </a>
+
+          <form
+            method="POST"
+            action="{% url 'account-profile-delete_address' address.id %}"
+          >
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-dark rounded-pill px-4">
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+      <div class="empty-address-card text-center">
+        <h3 class="fw-bold mb-3">No Addresses Added</h3>
+
+        <p class="text-muted mb-4">
+          Add your first delivery address to continue shopping.
+        </p>
+
+        <a
+          href="{% url 'account-profile-add_address' %}"
+          class="btn btn-dark rounded-pill px-5 py-2"
+        >
+          Add Address
+        </a>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  body {
+    background: #f5f5f5;
+  }
+
+  .address-modern-card {
+    background: white;
+    border-radius: 30px;
+    padding: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: 0.4s ease;
+    overflow: hidden;
+  }
+
+  .default-badge {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: black;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .empty-address-card {
+    background: white;
+    padding: 70px 30px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+{% endblock %}
+
+
+{% block title %}
+    All Addresses
+{% endblock %}

@@ -1,0 +1,496 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="mb-5">
+
+        <h1 class="fw-bold checkout-title">
+            Checkout
+        </h1>
+
+        <p class="text-muted">
+            Complete your order and enjoy your new style.
+        </p>
+
+    </div>
+
+    <div class="row g-5">
+
+        <!-- LEFT SIDE -->
+
+        <div class="col-lg-7">
+
+            <div class="checkout-section">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <h3 class="fw-bold mb-0">
+                        Your Order
+                    </h3>
+
+                    <span class="item-count">
+                        {{ cart_items.count }} {% if cart_items.count > 1 %} Items {% else %} Item {% endif %}
+                    </span>
+
+                </div>
+
+                {% for item in cart_items %}
+
+                <div class="checkout-item">
+
+                    <img
+                        src="{{ item.product.image.url }}"
+                        alt="{{ item.product.title }}"
+                        class="checkout-product-img"
+                    >
+
+
+                    <div class="flex-grow-1">
+
+                        <h5 class="fw-bold mb-2">
+                            {{ item.product.title }}
+                        </h5>
+
+                        <p class="text-muted small mb-2">
+                            Quantity: {{ item.quantity }}
+                        </p>
+
+                        <h6 class="fw-bold mb-0">
+                            ₹{{ item.total_price }}
+                        </h6>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+
+        <div class="col-lg-5">
+
+            <div class="checkout-section mb-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <h3 class="fw-bold mb-0">
+                        Delivery Address
+                    </h3>
+
+                    <a
+                        href="{% url 'account-profile-add_address' %}"
+                        class="add-address-btn"
+                    >
+                        + Add
+                    </a>
+
+                </div>
+
+                <form method="POST" action="{% url 'order-place' %}">
+
+                    {% csrf_token %}
+
+                    <div class="address-wrapper">
+
+                        {% for address in addresses %}
+
+                        <label class="address-option">
+
+                            <input
+                                type="radio"
+                                name="address"
+                                value="{{ address.id }}"
+                                class="address-radio"
+                                required
+                            >
+
+                            <div class="address-content">
+
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+
+                                    <h6 class="fw-bold mb-0">
+
+                                        {{ address.first_name }}
+                                        {{ address.last_name }}
+
+                                    </h6>
+
+                                    {% if address.is_default %}
+
+                                    <span class="default-pill">
+                                        Default
+                                    </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <p class="text-muted small mb-2">
+
+                                    {{ address.street }},
+                                    {{ address.city }},
+                                    {{ address.state }}
+
+                                </p>
+
+                                <p class="small fw-semibold mb-0">
+
+                                    {{ address.phone_number }}
+
+                                </p>
+
+                            </div>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+                     <div class="checkout-section mt-4">
+
+    <h3 class="fw-bold mb-4">
+        Payment Method
+    </h3>
+
+    <div class="payment-methods">
+
+
+        <label class="payment-option">
+
+            <input
+                type="radio"
+                name="payment_method"
+                value="COD"
+                class="payment-radio"
+                required
+            >
+
+            <div class="payment-content">
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        Cash On Delivery
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Pay when your order arrives
+                    </p>
+
+                </div>
+
+                <span class="payment-badge">
+                    Available
+                </span>
+
+            </div>
+
+        </label>
+
+        <div class="payment-disabled">
+
+            <div class="payment-content">
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        UPI Payment
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Google Pay / PhonePe / Paytm
+                    </p>
+
+                </div>
+
+                <span class="coming-soon">
+                    Soon
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="payment-disabled">
+
+            <div class="payment-content">
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        Credit / Debit Card
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        Visa / Mastercard
+                    </p>
+
+                </div>
+
+                <span class="coming-soon">
+                    Soon
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+            </div>
+
+            <!-- Order Summary -->
+
+            <div class="checkout-summary">
+
+                <h3 class="fw-bold mb-4">
+                    Summary
+                </h3>
+
+                <div class="summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span>
+                        ₹{{ cart.total_amount }}
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>
+                        Shipping
+                    </span>
+
+                    <span>
+                        Free
+                    </span>
+
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row total-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span>
+                        ₹{{ cart.total_amount }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="place-order-btn w-100"
+                >
+
+                    Place Order
+
+                </button>
+
+            </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.checkout-title {
+    font-size: 3rem;
+    letter-spacing: -1px;
+}
+
+.checkout-section {
+    background: white;
+    border-radius: 28px;
+    padding: 35px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.04);
+}
+
+.checkout-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.checkout-product-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 22px;
+    object-fit: cover;
+}
+
+.item-count {
+    background: black;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.address-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.address-option {
+    border: 1.5px solid #ededed;
+    border-radius: 24px;
+    padding: 20px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.address-option:has(input:checked) {
+    border-color: black;
+    background: #fafafa;
+}
+
+.address-radio {
+    display: none;
+}
+
+.default-pill {
+    background: black;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.checkout-summary {
+    background: #0f0f0f;
+    color: white;
+    border-radius: 30px;
+    padding: 35px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.8);
+}
+
+.summary-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 25px 0;
+}
+
+.total-row {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.place-order-btn {
+    margin-top: 30px;
+    border: none;
+    background: white;
+    color: black;
+    padding: 18px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.add-address-btn {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.payment-option,
+.payment-disabled {
+    border: 1.5px solid #ededed;
+    border-radius: 22px;
+    padding: 22px;
+    background: white;
+}
+
+.payment-option {
+    cursor: pointer;
+}
+
+.payment-option:has(input:checked) {
+    border-color: black;
+    background: #fafafa;
+}
+
+.payment-radio {
+    display: none;
+}
+
+.payment-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-badge {
+    background: black;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-disabled {
+    opacity: 0.55;
+}
+
+.coming-soon {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block title %}
+    Checkout
+{% endblock %}
