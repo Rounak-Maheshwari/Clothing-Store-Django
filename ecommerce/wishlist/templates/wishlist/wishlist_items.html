@@ -1,0 +1,118 @@
+{% extends 'templates/base.html' %} {% load static %} {% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">❤️ My Wishlist</h3>
+    <a href="/" class="btn btn-outline-primary btn-sm">Continue Shopping</a>
+  </div>
+
+  {% if wishlist_items|length == 0 %}
+  <div class="text-center py-5">
+    <h4 class="text-muted">Your wishlist is empty</h4>
+    <p class="text-muted">Start adding products!</p>
+    <a href="{% url 'products-list' %}" class="btn btn-dark mt-2"
+      >Browse Products</a
+    >
+  </div>
+
+  {% else %}
+
+  <div class="row g-4">
+    {% for item in wishlist_items %}
+
+    <div class="col-md-6 col-lg-4 col-xl-3">
+      <div class="wishlist-modern-card position-relative h-100">
+        <form method="POST" action="{% url 'wishlist-remove_item' item.id %}">
+          {% csrf_token %}
+
+          <button type="submit" class="remove-btn">✕</button>
+        </form>
+
+        <div class="wishlist-img-wrapper">
+          <img
+            src="{{ item.product.image.url }}"
+            alt="{{ item.product.title }}"
+            class="wishlist-img"
+          />
+        </div>
+
+        <div class="p-4 d-flex flex-column">
+          <h5 class="fw-bold mb-2">{{ item.product.title }}</h5>
+
+          <p class="text-muted small mb-3 flex-grow-1">
+            {{ item.product.description|truncatechars:50 }}
+          </p>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">₹{{ item.product.price }}</h4>
+          </div>
+
+          <a
+            href="{% url 'cart-add' item.product.id %}"
+            class="btn btn-dark rounded-pill w-100 py-2"
+          >
+            Add To Cart
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+<style>
+  .wishlist-modern-card {
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    transition: 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .wishlist-modern-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .wishlist-img-wrapper {
+    height: 240px;
+    overflow: hidden;
+  }
+
+  .wishlist-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s ease;
+  }
+
+  .wishlist-modern-card:hover .wishlist-img {
+    transform: scale(1.08);
+  }
+
+  .remove-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    z-index: 10;
+    transition: 0.3s ease;
+  }
+
+  .remove-btn:hover {
+    background: #dc3545;
+    color: white;
+  }
+</style>
+{% endblock %}
+
+{% block title %}
+  Your Wishlist
+{% endblock %}

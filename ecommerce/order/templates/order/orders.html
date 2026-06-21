@@ -1,0 +1,198 @@
+{% extends 'templates/base.html' %} {% block content %}
+
+<div class="container py-5">
+  <div class="mb-5">
+    <h1 class="order-title fw-bold">My Orders</h1>
+
+    <p class="text-muted">Track your recent purchases and order activity.</p>
+  </div>
+
+  {% for order in orders %}
+
+  <div class="order-card mb-4">
+
+    <div
+      class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4"
+    >
+      <div>
+        <h5 class="fw-bold mb-1">Order #{{ order.id }}</h5>
+
+        <p class="text-muted small mb-0">
+          Placed on {{ order.created_at|date:"F d, Y" }}
+        </p>
+        {% if order.delivered_at != none %}
+        <p class="small mb-0 text-success">
+          Delivered on {{ order.delivered_at|date:"F d, Y" }}
+        </p>
+        {% endif %}
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <!-- Status -->
+
+        <span
+          class="status-pill {% if order.status == 'Pending' %} pending {% elif order.status == 'Shipped' %} shipped {% elif order.status == 'Delivered' %} delivered {% endif %}"
+        >
+          {{ order.status }}
+        </span>
+
+
+        <h5 class="fw-bold mb-0">₹{{ order.total_amount }}</h5>
+      </div>
+    </div>
+
+    <div class="order-items">
+      {% for item in order.orderitem_set.all %}
+
+      <div class="order-item">
+
+        <img
+          src="{{ item.product.image.url }}"
+          alt="{{ item.product.title }}"
+          class="order-product-img"
+        />
+
+        <div class="flex-grow-1">
+          <h6 class="fw-bold mb-2">{{ item.product.title }}</h6>
+
+          <p class="text-muted small mb-1">Quantity: {{ item.quantity }}</p>
+
+          <p class="text-muted small mb-0">₹{{ item.price }}</p>
+        </div>
+
+        <div>
+          <h6 class="fw-bold mb-0">₹{{ item.price }}</h6>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+
+    <div class="order-footer mt-4">
+      <div>
+        <p class="text-muted small mb-1">Delivery Address</p>
+
+        <p class="fw-semibold mb-0">
+          {{ order.address.street }}, {{ order.address.city }}
+        </p>
+      </div>
+
+      <a href="{% url 'order-detail' order.id %}" class="view-order-btn">
+        View Details
+      </a>
+    </div>
+  </div>
+
+  {% empty %}
+
+  <div class="empty-orders text-center">
+    <h3 class="fw-bold mb-3">No Orders Yet</h3>
+
+    <p class="text-muted mb-4">Looks like you haven't placed any orders.</p>
+
+    <a href="{% url 'products-list' %}" class="shop-btn"> Start Shopping </a>
+  </div>
+
+  {% endfor %}
+</div>
+
+<style>
+  .order-title {
+    font-size: 3rem;
+    letter-spacing: -1px;
+  }
+
+  .order-card {
+    background: white;
+    border-radius: 32px;
+    padding: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  }
+
+  .status-pill {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .shipped {
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+
+  .delivered {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-top: 1px solid #f3f3f3;
+  }
+
+  .order-product-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 20px;
+  }
+
+  .order-footer {
+    border-top: 1px solid #f3f3f3;
+
+    padding-top: 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .view-order-btn,
+  .shop-btn {
+    background: black;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .empty-orders {
+    background: white;
+    padding: 90px 30px;
+    border-radius: 32px;
+
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  }
+</style>
+
+{% endblock %}
+
+
+{% block title %}
+    All Orders
+{% endblock %}

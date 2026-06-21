@@ -1,0 +1,172 @@
+{% extends 'templates/base.html' %} {% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="address-card">
+
+        <div class="text-center mb-5">
+          <h1 class="fw-bold display-6">{% if form.instance.pk %} Edit Address {% else %} Add New Address  {% endif %}</h1>
+
+          <p class="text-muted">
+            Save your delivery address for faster checkout
+          </p>
+        </div>
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="row g-4">
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"> First Name </label>
+
+              {{ form.first_name }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"> Last Name </label>
+
+              {{ form.last_name }}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold"> Phone Number </label>
+
+              {{ form.phone_number }}
+            </div>
+
+            <!-- Street -->
+
+            <div class="col-12">
+              <label class="form-label fw-semibold"> Street Address </label>
+
+              {{ form.street }}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"> City </label>
+
+              {{ form.city }}
+            </div>
+
+
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"> State </label>
+
+              {{ form.state }}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"> Pincode </label>
+
+              {{ form.pincode }}
+            </div>
+
+            <div class="col-12">
+              <div class="form-check mt-2">
+                {{ form.is_default }}
+
+                <label class="form-check-label ms-2">
+                  Set as default address
+                </label>
+              </div>
+            </div>
+
+            <!-- Button -->
+
+            <div class="col-12 mt-4">
+              <button
+                type="submit"
+                class="btn btn-dark btn-lg rounded-pill w-100 py-3"
+              >
+                Save Address
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .address-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+
+    padding: 55px;
+
+    border-radius: 36px;
+
+    border: 1px solid rgba(58, 32, 32, 0.4);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(14px);
+
+    box-shadow:
+      0 12px 30px rgba(0, 0, 0, 0.06),
+      0 25px 80px rgba(0, 0, 0, 0.08);
+
+    transition: all 0.4s ease;
+  }
+
+  .form-control,
+  .form-select,
+  textarea {
+    border: none !important;
+    border-radius: 18px !important;
+    padding: 15px 20px !important;
+    background: #f8f9fa !important;
+    box-shadow: none !important;
+    transition: 0.3s ease;
+  }
+
+  textarea {
+    min-height: 130px;
+    resize: none !important;
+
+    border: 2px solid #e9ecef !important;
+    border-radius: 20px !important;
+
+    padding: 18px 20px !important;
+
+    background: #fafafa !important;
+
+    transition: 0.3s ease;
+  }
+  textarea:focus {
+    border-color: black !important;
+
+    background: white !important;
+
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: none;
+  }
+
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .btn-dark {
+    transition: 0.3s ease;
+  }
+</style>
+
+{% endblock %}
+
+{% block title %}
+{% if form.instance.pk %}
+    Edit Address
+{% else %}
+    Add Address
+{% endif %}
+
+{% endblock %}
